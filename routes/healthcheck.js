@@ -1,16 +1,14 @@
-const Router = require('koa-joi-router');
+const router = require('koa-joi-router');
 
-const router = Router();
+const pkg = require('../package.json');
 
-router.get('/ping', async (ctx) => {
+const healthcheck = router();
+healthcheck.get('/healthcheck', async (ctx) => {
   try {
-    ctx.body = {
-      status: 'success',
-      data: 'Test Server',
-    };
+    ctx.body = `${pkg.name}`;
   } catch (e) {
     console.error(e);
   }
 });
 
-module.exports = router;
+module.exports = healthcheck;
