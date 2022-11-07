@@ -3,8 +3,8 @@
   "private": true,
   "scripts": {
     "test": "jest",
-    "test:watch": "npm run test -- --watchAll",
-    "start": "nodemon server.js",
+    "dev": "nodemon server.js",
+    "start": "node server.js",
     "prepare": "husky install"
   },
   "dependencies": {
