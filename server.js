@@ -3,6 +3,8 @@ const bodyParser = require('koa-bodyparser');
 const cors = require('koa2-cors');
 const logger = require('koa-logger');
 
+require('dotenv').config();
+
 const config = require('./config');
 const routes = require('./routes');
 
