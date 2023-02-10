@@ -1,8 +1,8 @@
-const router = require('koa-joi-router');
+const Router = require('@koa/router');
 
 const pkg = require('../package.json');
 
-const healthcheck = router();
+const healthcheck = new Router();
 healthcheck.get('/healthcheck', async (ctx) => {
   try {
     ctx.body = `${pkg.name}`;
