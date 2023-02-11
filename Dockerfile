@@ -2,6 +2,8 @@
 
 FROM debian:bullseye as builder
 
+ENV HUSKY_SKIP_INSTALL=1
+
 ARG NODE_VERSION=18.14.0
 
 RUN apt-get update; apt install -y curl
@@ -15,9 +17,7 @@ RUN volta install node@${NODE_VERSION}
 RUN mkdir /app
 WORKDIR /app
 
-ENV NODE_ENV production
-
-ENV HUSKY_SKIP_INSTALL=1
+ENV NODE_ENV=production
 
 COPY . .
 
