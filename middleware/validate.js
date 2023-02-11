@@ -64,7 +64,11 @@ function validationMiddleware(validation) {
       ctx.response.status = 400;
       ctx.type = 'json';
       ctx.body = { error: inputErrors };
-      ctx.app.emit('error', new Error('ValidationError', { cause: { error: inputErrors } }), ctx);
+      ctx.app.emit(
+        'error',
+        new Error('ValidationError', { cause: { error: inputErrors } }),
+        ctx
+      );
 
       return;
     }
@@ -90,7 +94,9 @@ function validationMiddleware(validation) {
 function isValidation(val) {
   const props = ['body', 'query', 'params', 'response'];
 
-  return typeof val === 'object' ? props.some((prop) => Boolean(val[prop])) : false;
+  return typeof val === 'object'
+    ? props.some((prop) => Boolean(val[prop]))
+    : false;
 }
 
 function noopMiddleware(ctx, next) {

@@ -23,7 +23,7 @@ workout.post(
   '/workout',
   validate({ body: z.object({ name: z.string(), userId: z.string() }) }),
   async (ctx) => {
-    const workout = await createWorkout(ctx.body);
+    const workout = await createWorkout(ctx.request.body);
     ctx.body = workout;
   }
 );

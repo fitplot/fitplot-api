@@ -21,6 +21,7 @@ app.use(
 app.use(logger());
 
 app.use(routes.middleware());
+app.use(routes.allowedMethods());
 
 app.listen(PORT, async () => {
   console.log(`Server listening on port: ${PORT}`);

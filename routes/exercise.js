@@ -8,9 +8,9 @@ const {
   updateExercise,
 } = require('../services/exercise');
 
-const exercise = new Router();
+const router = new Router();
 
-exercise.get(
+router.get(
   '/exercise/:id',
   validate({ params: z.object({ id: z.string() }) }),
   async (ctx) => {
@@ -19,7 +19,7 @@ exercise.get(
   }
 );
 
-exercise.post(
+router.post(
   '/exercise',
   validate({
     body: z.object({
@@ -28,12 +28,12 @@ exercise.post(
     }),
   }),
   async (ctx) => {
-    const exercise = await createExercise(ctx.body);
+    const exercise = await createExercise(ctx.request.body);
     ctx.body = exercise;
   }
 );
 
-exercise.put(
+router.put(
   '/exercise/:id',
   validate({
     params: z.object({ id: z.string() }),
@@ -42,9 +42,9 @@ exercise.put(
     }),
   }),
   async (ctx) => {
-    const exercise = await updateExercise(ctx.params.id, ctx.body);
+    const exercise = await updateExercise(ctx.params.id, ctx.request.body);
     ctx.body = exercise;
   }
 );
 
-module.exports = exercise;
+module.exports = router;

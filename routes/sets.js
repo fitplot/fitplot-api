@@ -29,7 +29,7 @@ sets.post(
     }),
   }),
   async (ctx) => {
-    const set = await createSet(ctx.body);
+    const set = await createSet(ctx.request.body);
     ctx.body = set;
   }
 );
