@@ -1,3 +1,5 @@
+const prisma = require('../lib/prisma');
+
 async function createExercise(exercise) {
   return await prisma.exercise.create({ data: exercise });
 }
