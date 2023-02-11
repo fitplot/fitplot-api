@@ -46,6 +46,9 @@ FROM base
 
 ENV NODE_ENV=production
 
+ARG GITHUB_SHA
+ENV GITHUB_SHA=$GITHUB_SHA
+
 RUN mkdir /app/
 WORKDIR /app/
 
