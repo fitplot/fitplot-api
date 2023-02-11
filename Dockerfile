@@ -17,6 +17,8 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
+ENV HUSKY_SKIP_INSTALL=1
+
 COPY . .
 
 RUN npm install
