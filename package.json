@@ -2,9 +2,10 @@
   "name": "nexus-api",
   "private": true,
   "scripts": {
-    "test": "echo \"No test suite.\" && exit 0",
     "dev": "nodemon server.js",
     "start": "node server.js",
+    "test": "echo \"No test suite.\" && exit 0",
+    "lint": "exit 0",
     "prepare": "husky install"
   },
   "dependencies": {
