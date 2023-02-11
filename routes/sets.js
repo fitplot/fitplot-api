@@ -2,7 +2,7 @@ const Router = require('@koa/router');
 const z = require('zod');
 
 const { validate } = require('../middleware');
-const { createSetForWorkout, getSetsForWorkout } = require('../services/sets');
+const { createSetForWorkout, getSetsForWorkout } = require('../services/set');
 
 const sets = new Router();
 
