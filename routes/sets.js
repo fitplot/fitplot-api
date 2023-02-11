@@ -2,7 +2,7 @@ const Router = require('@koa/router');
 const z = require('zod');
 
 const { validate } = require('../middleware');
-const { createSetForWorkout, getSetsForWorkout } = require('../services/set');
+const { createSet, getSetsForWorkout } = require('../services/set');
 
 const sets = new Router();
 
@@ -29,7 +29,7 @@ sets.post(
     }),
   }),
   async (ctx) => {
-    const set = await createSetForWorkout(ctx.body);
+    const set = await createSet(ctx.body);
     ctx.body = set;
   }
 );

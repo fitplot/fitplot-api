@@ -1,5 +1,9 @@
+async function createExercise(exercise) {
+  return await prisma.exercise.create({ data: exercise });
+}
+
 async function getExercise(id) {
-  return prisma.exercise.findUnique({
+  return await prisma.exercise.findUnique({
     where: {
       id,
     },
@@ -9,8 +13,16 @@ async function getExercise(id) {
   });
 }
 
+async function getExercisesForUser(userId) {
+  return await prisma.exercise.findMany({
+    where: {
+      userId,
+    },
+  });
+}
+
 async function updateExercise(id, { name }) {
-  return prisma.exercise.update({
+  return await prisma.exercise.update({
     where: {
       id,
     },
@@ -21,6 +33,8 @@ async function updateExercise(id, { name }) {
 }
 
 module.exports = {
+  createExercise,
   getExercise,
+  getExercisesForUser,
   updateExercise,
 };

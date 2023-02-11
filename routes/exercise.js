@@ -2,7 +2,11 @@ const Router = require('@koa/router');
 const z = require('zod');
 
 const { validate } = require('../middleware');
-const { getExercise, updateExercise } = require('../services/exercise');
+const {
+  createExercise,
+  getExercise,
+  updateExercise,
+} = require('../services/exercise');
 
 const exercise = new Router();
 
@@ -11,6 +15,20 @@ exercise.get(
   validate({ params: z.object({ id: z.string() }) }),
   async (ctx) => {
     const exercise = await getExercise(ctx.params.id);
+    ctx.body = exercise;
+  }
+);
+
+exercise.post(
+  '/exercise',
+  validate({
+    body: z.object({
+      name: z.string(),
+      userId: z.string(),
+    }),
+  }),
+  async (ctx) => {
+    const exercise = await createExercise(ctx.body);
     ctx.body = exercise;
   }
 );
