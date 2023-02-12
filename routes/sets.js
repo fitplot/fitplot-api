@@ -20,11 +20,11 @@ sets.post(
   validate({
     params: z.object({ id: z.string() }),
     body: z.object({
-      amount: z.string(),
+      amount: z.string().default('0'),
       exerciseId: z.string(),
-      unit: z.string(),
+      unit: z.string().default('lbs'),
       userId: z.string(),
-      volume: z.string(),
+      volume: z.string().default('0'),
       workoutId: z.string(),
     }),
   }),

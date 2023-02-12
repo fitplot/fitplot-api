@@ -8,7 +8,7 @@ async function validate(data, schema, name) {
   const parsed = await schema.safeParseAsync(data);
 
   if (!parsed.success) {
-    parsed.error.name = `${parsed.error.name}: ${name}`;
+    parsed.error.name = `Validation Error in: ${name}`;
     return parsed.error;
   }
 
@@ -64,11 +64,6 @@ function validationMiddleware(validation) {
       ctx.response.status = 400;
       ctx.type = 'json';
       ctx.body = { error: inputErrors };
-      ctx.app.emit(
-        'error',
-        new Error('ValidationError', { cause: { error: inputErrors } }),
-        ctx
-      );
 
       return;
     }

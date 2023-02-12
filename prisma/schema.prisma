@@ -9,7 +9,9 @@ generator client {
 
 model Exercise {
   id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime  @default(now())
   name      String
+  updatedAt  DateTime  @updatedAt
   userId    String
   sets      Set[]
   @@map("exercise")
