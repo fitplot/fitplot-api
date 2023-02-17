@@ -1,7 +1,7 @@
 const prisma = require('../lib/prisma');
 
-async function createSet(set) {
-  return await prisma.set.create({ data: set });
+async function createManySets(sets) {
+  return await prisma.set.createMany({ data: sets });
 }
 
 async function getSet(id) {
@@ -13,7 +13,7 @@ async function getSetsForWorkout(workoutId) {
 }
 
 module.exports = {
-  createSet,
+  createManySets,
   getSet,
   getSetsForWorkout,
 };

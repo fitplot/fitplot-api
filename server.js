@@ -12,7 +12,13 @@ const PORT = config.port;
 
 const app = new Koa();
 
-app.use(bodyParser());
+app.use(
+  bodyParser({
+    onerror: function (err, ctx) {
+      ctx.throw(422, 'body parse error');
+    },
+  })
+);
 app.use(
   cors({
     origin: '*',

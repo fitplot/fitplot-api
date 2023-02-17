@@ -6,6 +6,7 @@ const {
   getWorkout,
   createWorkout,
   updateWorkout,
+  deleteWorkout,
 } = require('../services/workout');
 
 const workout = new Router();
@@ -35,9 +36,14 @@ workout.put(
     body: z.object({ name: z.string() }),
   }),
   async (ctx) => {
-    const workout = await updateWorkout(ctx.params.id, ctx.body);
+    const workout = await updateWorkout(ctx.params.id, ctx.request.body);
     ctx.body = workout;
   }
 );
+
+workout.delete('/workout/:id', async (ctx) => {
+  await deleteWorkout(ctx.params.id);
+  ctx.body = { id: ctx.params.id };
+});
 
 module.exports = workout;

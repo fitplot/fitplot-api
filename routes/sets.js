@@ -2,7 +2,7 @@ const Router = require('@koa/router');
 const z = require('zod');
 
 const { validate } = require('../middleware');
-const { createSet, getSetsForWorkout } = require('../services/set');
+const { createManySets, getSetsForWorkout } = require('../services/set');
 
 const sets = new Router();
 
@@ -16,21 +16,22 @@ sets.get(
 );
 
 sets.post(
-  '/workout/:id/sets',
+  '/workout/sets',
   validate({
-    params: z.object({ id: z.string() }),
-    body: z.object({
-      amount: z.string().default('0'),
-      exerciseId: z.string(),
-      unit: z.string().default('lbs'),
-      userId: z.string(),
-      volume: z.string().default('0'),
-      workoutId: z.string(),
-    }),
+    body: z.array(
+      z.object({
+        amount: z.string().default('0'),
+        exerciseId: z.string(),
+        unit: z.string().default('lbs'),
+        userId: z.string(),
+        volume: z.string().default('0'),
+        workoutId: z.string(),
+      })
+    ),
   }),
   async (ctx) => {
-    const set = await createSet(ctx.request.body);
-    ctx.body = set;
+    const result = await createManySets(ctx.request.body);
+    ctx.body = result;
   }
 );
 
