@@ -16,13 +16,14 @@ async function createWorkout(workout) {
   return await prisma.workout.create({ data: workout });
 }
 
-async function updateWorkout(id, { name }) {
+async function updateWorkout(id, { name, completedAt }) {
   return prisma.workout.update({
     where: {
       id,
     },
     data: {
       name,
+      completedAt,
     },
   });
 }

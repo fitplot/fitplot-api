@@ -2,7 +2,12 @@ const Router = require('@koa/router');
 const z = require('zod');
 
 const { validate } = require('../middleware');
-const { createManySets, getSetsForWorkout } = require('../services/set');
+const {
+  createManySets,
+  getSetsForWorkout,
+  updateSet,
+  deleteSet,
+} = require('../services/set');
 
 const sets = new Router();
 
@@ -20,11 +25,11 @@ sets.post(
   validate({
     body: z.array(
       z.object({
-        amount: z.string().default('0'),
+        amount: z.string(),
         exerciseId: z.string(),
         unit: z.string().default('lbs'),
         userId: z.string(),
-        volume: z.string().default('0'),
+        volume: z.string().nullable(),
         workoutId: z.string(),
       })
     ),
@@ -32,6 +37,33 @@ sets.post(
   async (ctx) => {
     const result = await createManySets(ctx.request.body);
     ctx.body = result;
+  }
+);
+
+sets.put(
+  '/workout/set/:id',
+  validate({
+    params: z.object({ id: z.string() }),
+    body: z.object({
+      amount: z.string(),
+      unit: z.string().default('lbs'),
+      volume: z.string().nullable(),
+    }),
+  }),
+  async (ctx) => {
+    const result = await updateSet(ctx.params.id, ctx.request.body);
+    ctx.body = result;
+  }
+);
+
+sets.delete(
+  '/workout/set/:id',
+  validate({
+    params: z.object({ id: z.string() }),
+  }),
+  async (ctx) => {
+    await deleteSet(ctx.params.id);
+    ctx.body = { id: ctx.params.id };
   }
 );
 
