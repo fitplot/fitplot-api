@@ -32,11 +32,7 @@ volta pin node@x.x.x
 
 ### `.env`
 
-Create a `.env` file at your project root. In this file, add the following secret keys:
-
-```
-DATABASE_URL=
-```
+Make a copy of the `.env.example` file in the project root. Name your local copy `.env.local`. This file will not be checked in. Some values in your `.env.local` may need to be filled in from project secrets.
 
 ## Stack
 

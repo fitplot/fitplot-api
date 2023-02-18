@@ -1,18 +1,18 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-.vscode/
+.vscode
 .DS_Store
-node_modules/
+node_modules
 
-/.cache
-/coverage
+.cache
+coverage
 /prisma/sqlite.db
 
-*.local.*
+*.local*
 
 .env
 .env.production
 .envrc
-/test-results/
+test-results
 
 .eslintcache
