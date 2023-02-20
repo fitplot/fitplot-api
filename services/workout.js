@@ -1,9 +1,23 @@
 const prisma = require('../lib/prisma');
 
-async function getWorkoutsForUser(userId) {
+async function getWorkoutsForUser(userId, { take, orderBy } = {}) {
   return await prisma.workout.findMany({
+    take,
     where: {
       userId,
+    },
+    orderBy,
+  });
+}
+
+async function getTotalWorkoutsForUser(userId) {
+  return await prisma.workout.count({
+    where: {
+      userId,
+    },
+    select: {
+      _all: true,
+      completedAt: true,
     },
   });
 }
@@ -38,6 +52,7 @@ async function deleteWorkout(id) {
 
 module.exports = {
   getWorkoutsForUser,
+  getTotalWorkoutsForUser,
   getWorkout,
   createWorkout,
   updateWorkout,
