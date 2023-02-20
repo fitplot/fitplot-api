@@ -4,6 +4,7 @@ const z = require('zod');
 const { validate } = require('../middleware');
 const {
   createManySets,
+  getPreviousSetsForExercise,
   getSetsForWorkout,
   updateSet,
   deleteSet,
@@ -20,8 +21,23 @@ sets.get(
   }
 );
 
+sets.get(
+  '/exercise/:id/sets/previous',
+  validate({
+    params: z.object({ id: z.string() }),
+    query: z.object({ workoutId: z.string() }),
+  }),
+  async (ctx) => {
+    const sets = await getPreviousSetsForExercise(
+      ctx.params.id,
+      ctx.query.workoutId
+    );
+    ctx.body = sets;
+  }
+);
+
 sets.post(
-  '/workout/sets',
+  '/sets',
   validate({
     body: z.array(
       z.object({

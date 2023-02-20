@@ -8,6 +8,19 @@ async function getSet(id) {
   return await prisma.set.findUnique({ where: { id } });
 }
 
+async function getPreviousSetsForExercise(exerciseId, workoutId) {
+  const mostRecentSetForExercise = await prisma.set.findFirst({
+    where: { exerciseId, NOT: { workoutId } },
+    orderBy: { createdAt: 'asc' },
+  });
+
+  if (!mostRecentSetForExercise) return null;
+
+  return await prisma.set.findMany({
+    where: { exerciseId, workoutId: mostRecentSetForExercise.workoutId },
+  });
+}
+
 async function getSetsForWorkout(workoutId) {
   return await prisma.set.findMany({ where: { workoutId } });
 }
@@ -27,6 +40,7 @@ async function deleteSet(id) {
 
 module.exports = {
   createManySets,
+  getPreviousSetsForExercise,
   getSet,
   getSetsForWorkout,
   updateSet,
