@@ -22,18 +22,19 @@ async function getTotalWorkoutsForUser(userId) {
   });
 }
 
-async function getWorkout(id) {
-  return await prisma.workout.findUnique({ where: { id } });
+async function getWorkout({ id, userId }) {
+  return await prisma.workout.findUnique({ where: { id, userId } });
 }
 
 async function createWorkout(workout) {
   return await prisma.workout.create({ data: workout });
 }
 
-async function updateWorkout(id, { name, completedAt }) {
+async function updateWorkout({ id, userId }, { name, completedAt }) {
   return prisma.workout.update({
     where: {
       id,
+      userId,
     },
     data: {
       name,

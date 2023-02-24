@@ -1,7 +1,7 @@
 const Router = require('@koa/router');
 const z = require('zod');
 
-const { validate } = require('../middleware');
+const { validate, user } = require('../middleware');
 const {
   createExercise,
   getExercise,
@@ -12,9 +12,14 @@ const router = new Router();
 
 router.get(
   '/exercise/:id',
+  user({ required: true }),
   validate({ params: z.object({ id: z.string() }) }),
   async (ctx) => {
-    const exercise = await getExercise(ctx.params.id);
+    const exercise = await getExercise({
+      id: ctx.params.id,
+      userId: ctx.user.id,
+    });
+
     ctx.body = exercise;
   }
 );
@@ -24,11 +29,14 @@ router.post(
   validate({
     body: z.object({
       name: z.string(),
-      userId: z.string(),
     }),
   }),
+  user({ required: true }),
   async (ctx) => {
-    const exercise = await createExercise(ctx.request.body);
+    const exercise = await createExercise({
+      ...ctx.request.body,
+      userId: ctx.user.id,
+    });
     ctx.body = exercise;
   }
 );
@@ -41,8 +49,13 @@ router.put(
       name: z.string(),
     }),
   }),
+  user({ required: true }),
   async (ctx) => {
-    const exercise = await updateExercise(ctx.params.id, ctx.request.body);
+    const exercise = await updateExercise({
+      id: ctx.params.id,
+      userId: ctx.user.id,
+      ...ctx.request.body,
+    });
     ctx.body = exercise;
   }
 );

@@ -1,7 +1,7 @@
 const Router = require('@koa/router');
 const z = require('zod');
 
-const { validate } = require('../middleware');
+const { validate, user } = require('../middleware');
 const {
   getWorkoutsForUser,
   getTotalWorkoutsForUser,
@@ -9,27 +9,24 @@ const {
 
 const workouts = new Router();
 
-workouts.get(
-  '/workouts',
-  validate({ query: z.object({ userId: z.string() }) }),
-  async (ctx) => {
-    const workouts = await getWorkoutsForUser(ctx.query.userId);
-    ctx.body = workouts;
-  }
-);
+workouts.get('/workouts', user({ required: true }), async (ctx) => {
+  const workouts = await getWorkoutsForUser(ctx.user.id);
+  ctx.body = workouts;
+});
 
 workouts.get(
   '/workouts/summary',
   validate({
-    query: z.object({ userId: z.string(), take: z.coerce.number().default(8) }),
+    query: z.object({ take: z.coerce.number().default(8) }),
   }),
+  user({ required: true }),
   async (ctx) => {
-    const workouts = await getWorkoutsForUser(ctx.query.userId, {
+    const workouts = await getWorkoutsForUser(ctx.user.id, {
       take: ctx.query.take,
       orderBy: { createdAt: 'desc' },
     });
     const { _all: total, completedAt: totalCompleted } =
-      await getTotalWorkoutsForUser(ctx.query.userId);
+      await getTotalWorkoutsForUser(ctx.user.id);
     ctx.body = {
       workouts,
       total,
