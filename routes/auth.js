@@ -26,6 +26,9 @@ router.post(
 
     const user = await getUserByEmail(email);
 
+    /*
+     * TODO: handle forwarded host, this is undefined when running in Fly.io
+
     const host = ctx.headers['X-Forwarded-Host'] || ctx.headers['host'];
     console.info(
       'X-Forwarded-Host',
@@ -34,6 +37,8 @@ router.post(
       ctx.headers['host']
     );
     const protocol = host.includes('localhost') ? 'http' : 'https';
+
+    */
 
     if (!user) {
       ctx.status = 401;
@@ -44,7 +49,7 @@ router.post(
     ctx.body = {
       magicLink: getMagicLink({
         email,
-        domainUrl: `${protocol}://${host}`,
+        domainUrl: '', // TODO: `${protocol}://${host}`,
       }),
     };
   }
