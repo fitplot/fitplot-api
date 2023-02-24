@@ -4,10 +4,11 @@ async function createExercise(exercise) {
   return await prisma.exercise.create({ data: exercise });
 }
 
-async function getExercise(id) {
-  return await prisma.exercise.findUnique({
+async function getExercise({ id, userId }) {
+  return await prisma.exercise.findFirst({
     where: {
       id,
+      userId,
     },
     include: {
       sets: true,

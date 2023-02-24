@@ -23,7 +23,7 @@ async function getTotalWorkoutsForUser(userId) {
 }
 
 async function getWorkout({ id, userId }) {
-  return await prisma.workout.findUnique({ where: { id, userId } });
+  return await prisma.workout.findFirst({ where: { id, userId } });
 }
 
 async function createWorkout(workout) {
