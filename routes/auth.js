@@ -27,6 +27,12 @@ router.post(
     const user = await getUserByEmail(email);
 
     const host = ctx.headers['X-Forwarded-Host'] || ctx.headers['host'];
+    console.info(
+      'X-Forwarded-Host',
+      ctx.headers['X-Forwarded-Host'],
+      'host',
+      ctx.headers['host']
+    );
     const protocol = host.includes('localhost') ? 'http' : 'https';
 
     if (!user) {
