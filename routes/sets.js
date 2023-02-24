@@ -1,7 +1,7 @@
 const Router = require('@koa/router');
 const z = require('zod');
 
-const { validate } = require('../middleware');
+const { validate, user } = require('../middleware');
 const {
   createManySets,
   getPreviousSetsForExercise,
@@ -15,8 +15,12 @@ const sets = new Router();
 sets.get(
   '/workout/:id/sets',
   validate({ params: z.object({ id: z.string() }) }),
+  user({ required: true }),
   async (ctx) => {
-    const sets = await getSetsForWorkout(ctx.params.id);
+    const sets = await getSetsForWorkout({
+      workoutId: ctx.params.id,
+      userId: ctx.user.id,
+    });
     ctx.body = sets;
   }
 );
@@ -27,9 +31,13 @@ sets.get(
     params: z.object({ id: z.string() }),
     query: z.object({ workoutId: z.string() }),
   }),
+  user({ required: true }),
   async (ctx) => {
     const sets = await getPreviousSetsForExercise(
-      ctx.params.id,
+      {
+        exerciseId: ctx.params.id,
+        userId: ctx.user.id,
+      },
       ctx.query.workoutId
     );
     ctx.body = sets;
@@ -44,14 +52,20 @@ sets.post(
         amount: z.string(),
         exerciseId: z.string(),
         unit: z.string().default('lbs'),
-        userId: z.string(),
         volume: z.string().nullable(),
         workoutId: z.string(),
       })
     ),
   }),
+  user({ required: true }),
   async (ctx) => {
-    const result = await createManySets(ctx.request.body);
+    const data = ctx.request.body;
+
+    data.forEach((set) => {
+      set.userId = ctx.user.id;
+    });
+
+    const result = await createManySets(data);
     ctx.body = result;
   }
 );
@@ -66,8 +80,12 @@ sets.put(
       volume: z.string().nullable(),
     }),
   }),
+  user({ required: true }),
   async (ctx) => {
-    const result = await updateSet(ctx.params.id, ctx.request.body);
+    const result = await updateSet(
+      { id: ctx.params.id, userId: ctx.user.id },
+      ctx.request.body
+    );
     ctx.body = result;
   }
 );
@@ -77,8 +95,9 @@ sets.delete(
   validate({
     params: z.object({ id: z.string() }),
   }),
+  user({ required: true }),
   async (ctx) => {
-    await deleteSet(ctx.params.id);
+    await deleteSet({ id: ctx.params.id, userId: ctx.user.id });
     ctx.body = { id: ctx.params.id };
   }
 );

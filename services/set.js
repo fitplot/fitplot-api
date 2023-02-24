@@ -4,13 +4,9 @@ async function createManySets(sets) {
   return await prisma.set.createMany({ data: sets });
 }
 
-async function getSet(id) {
-  return await prisma.set.findUnique({ where: { id } });
-}
-
-async function getPreviousSetsForExercise(exerciseId, workoutId) {
+async function getPreviousSetsForExercise({ exerciseId, userId }, workoutId) {
   const mostRecentSetForExercise = await prisma.set.findFirst({
-    where: { exerciseId, NOT: { workoutId } },
+    where: { exerciseId, userId, NOT: { workoutId } },
     orderBy: { createdAt: 'asc' },
   });
 
@@ -21,27 +17,26 @@ async function getPreviousSetsForExercise(exerciseId, workoutId) {
   });
 }
 
-async function getSetsForWorkout(workoutId) {
-  return await prisma.set.findMany({ where: { workoutId } });
+async function getSetsForWorkout({ workoutId, userId }) {
+  return await prisma.set.findMany({ where: { workoutId, userId } });
 }
 
-async function updateSet(id, { amount, volume, unit }) {
+async function updateSet({ id, userId }, { amount, volume, unit }) {
   return await prisma.set.update({
-    where: { id },
+    where: { id, userId },
     data: { amount, volume, unit },
   });
 }
 
-async function deleteSet(id) {
+async function deleteSet({ id, userId }) {
   return await prisma.set.delete({
-    where: { id },
+    where: { id, userId },
   });
 }
 
 module.exports = {
   createManySets,
   getPreviousSetsForExercise,
-  getSet,
   getSetsForWorkout,
   updateSet,
   deleteSet,

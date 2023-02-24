@@ -1,21 +1,6 @@
 const { ZodError } = require('zod');
 
-async function validate(data, schema, name) {
-  if (!schema) {
-    return undefined;
-  }
-
-  const parsed = await schema.safeParseAsync(data);
-
-  if (!parsed.success) {
-    parsed.error.name = `Validation Error in: ${name}`;
-    return parsed.error;
-  }
-
-  return parsed.data;
-}
-
-function validationMiddleware(validation) {
+function middleware(validation) {
   if (!isValidation(validation)) {
     return noopMiddleware;
   }
@@ -86,6 +71,21 @@ function validationMiddleware(validation) {
   };
 }
 
+async function validate(data, schema, name) {
+  if (!schema) {
+    return undefined;
+  }
+
+  const parsed = await schema.safeParseAsync(data);
+
+  if (!parsed.success) {
+    parsed.error.name = `Validation Error in: ${name}`;
+    return parsed.error;
+  }
+
+  return parsed.data;
+}
+
 function isValidation(val) {
   const props = ['body', 'query', 'params', 'response'];
 
@@ -98,7 +98,4 @@ function noopMiddleware(ctx, next) {
   return void next();
 }
 
-module.exports = {
-  validationMiddleware,
-  validate,
-};
+module.exports = middleware;

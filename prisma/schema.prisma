@@ -8,37 +8,62 @@ generator client {
 }
 
 model Exercise {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime  @default(now())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
   name      String
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime @updatedAt
   userId    String
   sets      Set[]
+
   @@map("exercise")
 }
 
 model Workout {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt  DateTime  @default(now())
-  completedAt  DateTime?
-  name       String
-  updatedAt  DateTime  @updatedAt
-  userId     String
-  sets       Set[]
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+  name        String
+  updatedAt   DateTime  @updatedAt
+  userId      String
+  sets        Set[]
+
   @@map("workout")
 }
 
 model Set {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
   amount     String
-  createdAt  DateTime  @default(now())
-  exercise   Exercise  @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
-  exerciseId String    @db.ObjectId
+  createdAt  DateTime @default(now())
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+  exerciseId String   @db.ObjectId
   unit       String
-  updatedAt  DateTime  @updatedAt
+  updatedAt  DateTime @updatedAt
   userId     String
   volume     String?
-  workout    Workout   @relation(fields: [workoutId], references: [id], onDelete: Cascade)
-  workoutId  String    @db.ObjectId
+  workout    Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  workoutId  String   @db.ObjectId
+
   @@map("workoutset")
+}
+
+model User {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  email     String    @unique
+  firstName String
+  role      String    @default("MEMBER")
+  sessions  Session[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @db.ObjectId
+  expiresAt DateTime
+
+  @@map("session")
 }

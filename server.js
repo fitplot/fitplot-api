@@ -8,9 +8,15 @@ require('dotenv').config();
 const config = require('./config');
 const routes = require('./routes');
 
+const session = require('./lib/session');
+
 const PORT = config.port;
 
 const app = new Koa();
+
+app.keys = [process.env.SIGNED_COOKIE_SECRET];
+
+app.use(session(app));
 
 app.use(
   bodyParser({
@@ -19,11 +25,13 @@ app.use(
     },
   })
 );
+
 app.use(
   cors({
     origin: '*',
   })
 );
+
 app.use(logger());
 
 app.use(routes.middleware());

@@ -1,5 +1,6 @@
 const Router = require('@koa/router');
 
+const auth = require('./auth');
 const exercise = require('./exercise');
 const exercises = require('./exercises');
 const healthcheck = require('./healthcheck');
@@ -8,6 +9,7 @@ const workout = require('./workout');
 const workouts = require('./workouts');
 
 const routes = new Router();
+routes.use(auth.middleware());
 routes.use(exercise.middleware());
 routes.use(exercises.middleware());
 routes.use(healthcheck.middleware());

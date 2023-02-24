@@ -1,5 +1,7 @@
-const { validationMiddleware } = require('./validate');
+const user = require('./user');
+const validate = require('./validate');
 
 module.exports = {
-  validate: validationMiddleware,
+  user,
+  validate,
 };

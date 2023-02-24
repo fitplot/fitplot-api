@@ -1,7 +1,7 @@
 const Router = require('@koa/router');
 const z = require('zod');
 
-const { validate } = require('../middleware');
+const { validate, user } = require('../middleware');
 const {
   getWorkout,
   createWorkout,
@@ -14,17 +14,24 @@ const workout = new Router();
 workout.get(
   '/workout/:id',
   validate({ params: z.object({ id: z.string() }) }),
+  user({ required: true }),
   async (ctx) => {
-    const workout = await getWorkout(ctx.params.id);
+    const workout = await getWorkout({
+      id: ctx.params.id,
+      userId: ctx.user.id,
+    });
     ctx.body = workout;
   }
 );
 
 workout.post(
   '/workout',
-  validate({ body: z.object({ name: z.string(), userId: z.string() }) }),
+  validate({ body: z.object({ name: z.string() }) }),
+  user({ required: true }),
   async (ctx) => {
-    const workout = await createWorkout(ctx.request.body);
+    const data = ctx.request.body;
+    data.userId = ctx.user.id;
+    const workout = await createWorkout(data);
     ctx.body = workout;
   }
 );
@@ -35,8 +42,12 @@ workout.put(
     params: z.object({ id: z.string() }),
     body: z.object({ name: z.string(), completedAt: z.string().nullable() }),
   }),
+  user({ required: true }),
   async (ctx) => {
-    const workout = await updateWorkout(ctx.params.id, ctx.request.body);
+    const workout = await updateWorkout(
+      { id: ctx.params.id, userId: ctx.user.id },
+      ctx.request.body
+    );
     ctx.body = workout;
   }
 );
@@ -46,8 +57,9 @@ workout.delete(
   validate({
     params: z.object({ id: z.string() }),
   }),
+  user({ required: true }),
   async (ctx) => {
-    await deleteWorkout(ctx.params.id);
+    await deleteWorkout({ id: ctx.params.id, userId: ctx.user.id });
     ctx.body = { id: ctx.params.id };
   }
 );

@@ -23,10 +23,11 @@ async function getExercisesForUser(userId) {
   });
 }
 
-async function updateExercise(id, { name }) {
+async function updateExercise({ id, userId, name }) {
   return await prisma.exercise.update({
     where: {
       id,
+      userId,
     },
     data: {
       name,
