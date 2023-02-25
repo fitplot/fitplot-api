@@ -4,7 +4,12 @@ const { getBuildId } = require('../lib/server');
 const pkg = require('../package.json');
 
 const healthcheck = new Router();
-healthcheck.get('/healthcheck', async (ctx) => {
+
+healthcheck.get('/healthcheck', (ctx) => {
+  ctx.status = 204;
+});
+
+healthcheck.get('/liveliness', async (ctx) => {
   ctx.body = {
     app: pkg.name,
     version: getBuildId(),
