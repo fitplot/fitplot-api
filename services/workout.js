@@ -43,10 +43,11 @@ async function updateWorkout({ id, userId }, { name, completedAt }) {
   });
 }
 
-async function deleteWorkout(id) {
+async function deleteWorkout({ id, userId }) {
   return prisma.workout.delete({
     where: {
       id,
+      userId,
     },
   });
 }
