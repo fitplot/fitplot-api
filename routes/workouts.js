@@ -17,7 +17,7 @@ workouts.get('/workouts', user({ required: true }), async (ctx) => {
 workouts.get(
   '/workouts/summary',
   validate({
-    query: z.object({ take: z.coerce.number().default(8) }),
+    query: z.object({ take: z.coerce.number().default(4) }),
   }),
   user({ required: true }),
   async (ctx) => {
