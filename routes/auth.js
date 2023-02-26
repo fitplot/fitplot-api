@@ -86,8 +86,6 @@ router.post('/sign-out', async (ctx) => {
   }
 
   ctx.session = null;
-
-  ctx.body = 'OK';
 });
 
 router.post(
