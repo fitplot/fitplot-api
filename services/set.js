@@ -28,6 +28,18 @@ async function updateSet({ id, userId }, { amount, volume, unit }) {
   });
 }
 
+async function updateManySets({ userId, fromExerciseId, toExerciseId }) {
+  return await prisma.set.updateMany({
+    where: {
+      userId,
+      exerciseId: fromExerciseId,
+    },
+    data: {
+      exerciseId: toExerciseId,
+    },
+  });
+}
+
 async function deleteSet({ id, userId }) {
   return await prisma.set.delete({
     where: { id, userId },
@@ -39,5 +51,6 @@ module.exports = {
   getPreviousSetsForExercise,
   getSetsForWorkout,
   updateSet,
+  updateManySets,
   deleteSet,
 };

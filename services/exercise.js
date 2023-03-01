@@ -36,8 +36,18 @@ async function updateExercise({ id, userId, name }) {
   });
 }
 
+async function deleteExercise({ id, userId }) {
+  return await prisma.exercise.delete({
+    where: {
+      id,
+      userId,
+    },
+  });
+}
+
 module.exports = {
   createExercise,
+  deleteExercise,
   getExercise,
   getExercisesForUser,
   updateExercise,
