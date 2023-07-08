@@ -12,7 +12,4 @@ test-results
 
 *.local*
 
-.env*
-.envrc
-
 .eslintcache
