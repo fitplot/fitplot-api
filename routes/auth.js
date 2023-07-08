@@ -1,12 +1,13 @@
 const Router = require('@koa/router');
 const z = require('zod');
 
-const { validate, user } = require('../middleware');
+const { ratelimit, user, validate } = require('../middleware');
 const {
   MAGIC_PARAM,
   getMagicLink,
   crackMagicLink,
 } = require('../lib/magic-link');
+const { sendMagicLink } = require('../lib/email');
 const { createUser, getUserByEmail } = require('../services/user');
 const { createSession, deleteSession } = require('../services/session');
 
@@ -14,31 +15,35 @@ const router = new Router();
 
 router.post(
   '/sign-in',
+  ratelimit,
   validate({ body: z.object({ email: z.string().email() }) }),
   user(),
   async (ctx) => {
+    // User is already logged-in
     if (ctx.user) {
       ctx.status = 204;
       return;
     }
 
     const email = ctx.request.body.email;
-
     const user = await getUserByEmail(email);
 
-    /*
-     * TODO: handle forwarded host, this is undefined when running in Fly.io
-
     const host = ctx.headers['X-Forwarded-Host'] || ctx.headers['host'];
+    const protocol = host.includes('localhost')
+      ? 'http'
+      : ctx.headers['X-Forwarded-Proto'] || 'https';
+    const domainUrl = `${protocol}://${host}`;
+
     console.info(
+      'Login request received with domainUrl=',
+      domainUrl,
       'X-Forwarded-Host',
       ctx.headers['X-Forwarded-Host'],
       'host',
-      ctx.headers['host']
+      ctx.headers['host'],
+      'X-Forwarded-Proto',
+      ctx.headers['X-Forwarded-Proto']
     );
-    const protocol = host.includes('localhost') ? 'http' : 'https';
-
-    */
 
     if (!user) {
       ctx.status = 401;
@@ -46,12 +51,14 @@ router.post(
       return;
     }
 
-    ctx.body = {
-      magicLink: getMagicLink({
-        email,
-        domainUrl: '', // TODO: `${protocol}://${host}`,
-      }),
-    };
+    const magicLink = getMagicLink({
+      email,
+      domainUrl: '', // TODO: `domainUrl`,
+    });
+
+    sendMagicLink({ email, magicLink });
+
+    ctx.body = 'OK';
   }
 );
 
@@ -90,6 +97,7 @@ router.post('/sign-out', async (ctx) => {
 
 router.post(
   '/magic',
+  ratelimit,
   validate({ query: z.object({ [MAGIC_PARAM]: z.string() }) }),
   async (ctx) => {
     const { email } = crackMagicLink(ctx);

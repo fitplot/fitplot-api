@@ -6,13 +6,13 @@ node_modules
 
 .cache
 coverage
+test-results
+
 /prisma/sqlite.db
 
 *.local*
 
-.env
-.env.production
+.env*
 .envrc
-test-results
 
 .eslintcache

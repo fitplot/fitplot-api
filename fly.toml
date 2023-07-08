@@ -1,39 +1,45 @@
-# fly.toml file generated for autumn-wind-3561 on 2022-11-02T21:25:02-07:00
-
-app = "autumn-wind-3561"
+app = "fitplot-api"
+primary_region = "lax"
 kill_signal = "SIGINT"
 kill_timeout = 5
-processes = []
 
 [env]
   PORT = "8080"
+  FLY = "true"
 
 [experimental]
   allowed_public_ports = []
   auto_rollback = true
 
 [[services]]
-  http_checks = []
-  internal_port = 8080
-  processes = ["app"]
   protocol = "tcp"
-  script_checks = []
+  internal_port = 8080
+
   [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
-    type = "connections"
+    type = "requests"
+    hard_limit = 200
+    soft_limit = 150
 
   [[services.ports]]
-    force_https = true
-    handlers = ["http"]
     port = 80
+    handlers = ["http"]
+    force_https = true
 
   [[services.ports]]
-    handlers = ["tls", "http"]
     port = 443
+    handlers = ["tls", "http"]
 
   [[services.tcp_checks]]
-    grace_period = "1s"
     interval = "15s"
-    restart_limit = 0
     timeout = "2s"
+    grace_period = "10s"
+    restart_limit = 6
+
+  [[services.http_checks]]
+    interval = "10s"
+    timeout = "5s"
+    grace_period = "1m0s"
+    restart_limit = 0
+    method = "get"
+    path = "/healthcheck"
+    protocol = "http"
