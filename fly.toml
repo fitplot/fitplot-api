@@ -41,5 +41,5 @@ kill_timeout = 5
     grace_period = "1m0s"
     restart_limit = 0
     method = "get"
-    path = "/healthcheck"
+    path = "/api/healthcheck"
     protocol = "http"
