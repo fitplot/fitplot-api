@@ -28,22 +28,13 @@ router.post(
     const email = ctx.request.body.email;
     const user = await getUserByEmail(email);
 
-    const host = ctx.headers['X-Forwarded-Host'] || ctx.headers['host'];
+    const host = ctx.headers['host'];
     const protocol = host.includes('localhost')
       ? 'http'
       : ctx.headers['X-Forwarded-Proto'] || 'https';
-    const domainUrl = `${protocol}://${host}`;
-
-    console.info(
-      'Login request received with domainUrl=',
-      domainUrl,
-      'X-Forwarded-Host',
-      ctx.headers['X-Forwarded-Host'],
-      'host',
-      ctx.headers['host'],
-      'X-Forwarded-Proto',
-      ctx.headers['X-Forwarded-Proto']
-    );
+    // TODO: get original host behind the reverse proxy in production
+    const domain = host.includes('localhost') ? host : 'fitplot.io';
+    const domainUrl = `${protocol}://${domain}`;
 
     if (!user) {
       ctx.status = 401;
@@ -53,7 +44,7 @@ router.post(
 
     const magicLink = getMagicLink({
       email,
-      domainUrl: '', // TODO: `domainUrl`,
+      domainUrl,
     });
 
     sendMagicLink({ email, magicLink });
