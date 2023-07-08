@@ -19,7 +19,7 @@ router.post(
   validate({ body: z.object({ email: z.string().email() }) }),
   user(),
   async (ctx) => {
-    // User is already logged-in
+    // User is already logged-in.
     if (ctx.user) {
       ctx.status = 204;
       return;
@@ -28,6 +28,13 @@ router.post(
     const email = ctx.request.body.email;
     const user = await getUserByEmail(email);
 
+    // User does not exist. They need to sign-up.
+    if (!user) {
+      ctx.status = 401;
+      ctx.body = 'Unauthorized';
+      return;
+    }
+
     const host = ctx.headers['host'];
     const protocol = host.includes('localhost')
       ? 'http'
@@ -35,12 +42,6 @@ router.post(
     // TODO: get original host behind the reverse proxy in production
     const domain = host.includes('localhost') ? host : 'fitplot.io';
     const domainUrl = `${protocol}://${domain}`;
-
-    if (!user) {
-      ctx.status = 401;
-      ctx.body = 'Unauthorized';
-      return;
-    }
 
     const magicLink = getMagicLink({
       email,
