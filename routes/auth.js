@@ -57,7 +57,7 @@ router.post(
 router.post(
   '/sign-up',
   validate({
-    body: z.object({ email: z.string().email(), firstName: z.string() }),
+    body: z.object({ email: z.string().email(), firstName: z.string().min(1) }),
   }),
   user(),
   async (ctx) => {
