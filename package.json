@@ -6,7 +6,8 @@
     "start": "node server.js",
     "test": "echo \"No test suite.\" && exit 0",
     "lint": "exit 0",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "pretty": "prettier -write ."
   },
   "dependencies": {
     "@koa/router": "^12.0.0",
