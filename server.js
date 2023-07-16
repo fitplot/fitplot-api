@@ -23,13 +23,13 @@ app.use(
     onerror: function (error, ctx) {
       ctx.throw(422, 'body parse error');
     },
-  }),
+  })
 );
 
 app.use(
   cors({
     origin: '*',
-  }),
+  })
 );
 
 app.use(logger());

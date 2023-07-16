@@ -51,7 +51,7 @@ router.post(
     sendMagicLink({ email, magicLink });
 
     ctx.body = 'OK';
-  },
+  }
 );
 
 router.post(
@@ -73,7 +73,7 @@ router.post(
     ctx.session.sessionId = session.id;
 
     ctx.body = 'OK';
-  },
+  }
 );
 
 router.post('/sign-out', async (ctx) => {
@@ -103,7 +103,7 @@ router.post(
     ctx.session.sessionId = session.id;
 
     ctx.body = 'OK';
-  },
+  }
 );
 
 router.get('/me', user({ required: true }), async (ctx) => {

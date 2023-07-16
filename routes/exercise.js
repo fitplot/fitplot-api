@@ -26,7 +26,7 @@ router.get(
     });
 
     ctx.body = exercise;
-  },
+  }
 );
 
 router.post(
@@ -43,7 +43,7 @@ router.post(
       userId: ctx.user.id,
     });
     ctx.body = exercise;
-  },
+  }
 );
 
 router.put(
@@ -62,7 +62,7 @@ router.put(
       ...ctx.request.body,
     });
     ctx.body = exercise;
-  },
+  }
 );
 
 router.delete(
@@ -112,7 +112,7 @@ router.delete(
 
       ctx.throw(error);
     }
-  },
+  }
 );
 
 module.exports = router;
