@@ -63,7 +63,9 @@
         {
           "allowList": {
             "ctx": true,
-            "pkg": true
+            "pkg": true,
+            "req": true,
+            "res": true
           }
         }
       ]
