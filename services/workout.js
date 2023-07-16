@@ -1,10 +1,10 @@
 const prisma = require('../lib/prisma');
 
-async function getWorkoutsForUser(userId, { take, cursor, from, to } = {}) {
+async function getWorkoutsForUser(userId, { take, cursor } = {}) {
   return await prisma.workout.findMany({
     take,
-    skip: cursor ? 1 : undefined, // Skip the cursor
-    cursor: cursor ? { id: cursor } : undefined,
+    skip: cursor ? 1 : null, // Skip the cursor
+    cursor: cursor ? { id: cursor } : null,
     where: {
       userId,
     },

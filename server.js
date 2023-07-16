@@ -20,16 +20,16 @@ app.use(session(app));
 
 app.use(
   bodyParser({
-    onerror: function (err, ctx) {
+    onerror: function (error, ctx) {
       ctx.throw(422, 'body parse error');
     },
-  })
+  }),
 );
 
 app.use(
   cors({
     origin: '*',
-  })
+  }),
 );
 
 app.use(logger());
@@ -41,8 +41,8 @@ app.listen(PORT, async () => {
   console.log(`Server listening on port: ${PORT}`);
 });
 
-app.on('error', (err) => {
-  console.error(err);
+app.on('error', (error) => {
+  console.error(error);
 });
 
 module.exports = app;

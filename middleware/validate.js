@@ -9,19 +9,19 @@ function middleware(validation) {
     // Input validation
     let inputErrors = [];
 
-    const [params, query, body] = await Promise.all([
+    const [parameters, query, body] = await Promise.all([
       validate(ctx.request.params, validation.params, 'Route Params'),
       validate(ctx.request.query, validation.query, 'Querystring'),
       validate(ctx.request.body, validation.body, 'Request Body'),
     ]);
 
-    if (params) {
-      if (params instanceof ZodError) {
-        inputErrors.push(params);
+    if (parameters) {
+      if (parameters instanceof ZodError) {
+        inputErrors.push(parameters);
       } else {
-        Object.keys(params).forEach((key) => {
-          ctx.request.params[key] = params[key];
-        });
+        for (const key of Object.keys(parameters)) {
+          ctx.request.params[key] = parameters[key];
+        }
       }
     }
 
@@ -29,9 +29,9 @@ function middleware(validation) {
       if (query instanceof ZodError) {
         inputErrors.push(query);
       } else {
-        Object.keys(query).forEach((key) => {
+        for (const key of Object.keys(query)) {
           ctx.request.query[key] = query[key];
-        });
+        }
       }
     }
 
@@ -39,13 +39,13 @@ function middleware(validation) {
       if (body instanceof ZodError) {
         inputErrors.push(body);
       } else {
-        Object.keys(body).forEach((key) => {
+        for (const key of Object.keys(body)) {
           ctx.request.body[key] = body[key];
-        });
+        }
       }
     }
 
-    if (inputErrors.length) {
+    if (inputErrors.length > 0) {
       ctx.response.status = 400;
       ctx.type = 'json';
       ctx.body = { error: inputErrors };
@@ -73,7 +73,7 @@ function middleware(validation) {
 
 async function validate(data, schema, name) {
   if (!schema) {
-    return undefined;
+    return;
   }
 
   const parsed = await schema.safeParseAsync(data);
@@ -86,11 +86,11 @@ async function validate(data, schema, name) {
   return parsed.data;
 }
 
-function isValidation(val) {
-  const props = ['body', 'query', 'params', 'response'];
+function isValidation(value) {
+  const properties = ['body', 'query', 'params', 'response'];
 
-  return typeof val === 'object'
-    ? props.some((prop) => Boolean(val[prop]))
+  return typeof value === 'object'
+    ? properties.some((property) => Boolean(value[property]))
     : false;
 }
 

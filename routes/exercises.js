@@ -1,5 +1,4 @@
 const Router = require('@koa/router');
-const z = require('zod');
 
 const { user } = require('../middleware');
 const { getExercisesForUser } = require('../services/exercise');

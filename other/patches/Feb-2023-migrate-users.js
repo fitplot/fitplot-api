@@ -11,4 +11,4 @@ const go = async () => {
   await prisma.exercise.updateMany(query);
 };
 
-go();
+await go();

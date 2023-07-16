@@ -8,4 +8,4 @@ const go = async () => {
   await prisma.set.deleteMany(query);
 };
 
-go();
+await go();

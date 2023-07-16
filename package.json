@@ -5,9 +5,8 @@
     "dev": "nodemon server.js",
     "start": "node server.js",
     "test": "echo \"No test suite.\" && exit 0",
-    "lint": "exit 0",
-    "prepare": "husky install",
-    "pretty": "prettier -write ."
+    "lint": "eslint --cache . --fix",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@koa/router": "^12.0.0",
@@ -24,16 +23,49 @@
     "zod": "^3.20.6"
   },
   "devDependencies": {
-    "eslint": "^7.32.0",
+    "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-only-error": "^1.0.2",
+    "eslint-plugin-unicorn": "^48.0.0",
     "husky": "^7.0.4",
+    "lint-staged": "^13.2.3",
     "nodemon": "^2.0.15",
-    "prettier": "^2.5.1",
+    "prettier": "^3.0.0",
     "prisma": "^5.0.0"
   },
   "volta": {
     "node": "18.14.0"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write .",
+      "eslint --fix"
+    ]
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:unicorn/recommended"
+    ],
+    "plugins": [
+      "unicorn",
+      "only-error"
+    ],
+    "rules": {
+      "unicorn/no-null": "off",
+      "unicorn/prefer-module": "off",
+      "unicorn/prevent-abbreviations": [
+        "error",
+        {
+          "allowList": {
+            "ctx": true
+          }
+        }
+      ]
+    }
   }
 }

@@ -22,7 +22,7 @@ sets.get(
       userId: ctx.user.id,
     });
     ctx.body = sets;
-  }
+  },
 );
 
 sets.get(
@@ -38,10 +38,10 @@ sets.get(
         exerciseId: ctx.params.id,
         userId: ctx.user.id,
       },
-      ctx.query.workoutId
+      ctx.query.workoutId,
     );
     ctx.body = sets;
-  }
+  },
 );
 
 sets.post(
@@ -54,20 +54,20 @@ sets.post(
         unit: z.string().default('lbs'),
         volume: z.string().nullable(),
         workoutId: z.string(),
-      })
+      }),
     ),
   }),
   user({ required: true }),
   async (ctx) => {
     const data = ctx.request.body;
 
-    data.forEach((set) => {
+    for (const set of data) {
       set.userId = ctx.user.id;
-    });
+    }
 
     const result = await createManySets(data);
     ctx.body = result;
-  }
+  },
 );
 
 sets.put(
@@ -84,10 +84,10 @@ sets.put(
   async (ctx) => {
     const result = await updateSet(
       { id: ctx.params.id, userId: ctx.user.id },
-      ctx.request.body
+      ctx.request.body,
     );
     ctx.body = result;
-  }
+  },
 );
 
 sets.delete(
@@ -99,7 +99,7 @@ sets.delete(
   async (ctx) => {
     await deleteSet({ id: ctx.params.id, userId: ctx.user.id });
     ctx.body = { id: ctx.params.id };
-  }
+  },
 );
 
 module.exports = sets;

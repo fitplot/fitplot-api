@@ -10,7 +10,7 @@ async function getPreviousSetsForExercise({ exerciseId, userId }, workoutId) {
     orderBy: { createdAt: 'asc' },
   });
 
-  if (!mostRecentSetForExercise) return null;
+  if (!mostRecentSetForExercise) return;
 
   return await prisma.set.findMany({
     where: { exerciseId, workoutId: mostRecentSetForExercise.workoutId },
