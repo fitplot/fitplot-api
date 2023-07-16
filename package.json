@@ -48,7 +48,6 @@
       "node": true
     },
     "extends": [
-      "eslint:recommended",
       "plugin:unicorn/recommended",
       "prettier"
     ],
@@ -63,7 +62,8 @@
         "error",
         {
           "allowList": {
-            "ctx": true
+            "ctx": true,
+            "pkg": true
           }
         }
       ]
