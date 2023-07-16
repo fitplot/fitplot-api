@@ -6,7 +6,7 @@ const pkg = require('../package.json');
 const healthcheck = new Router();
 
 healthcheck.get('/healthcheck', (ctx) => {
-  ctx.status = 204;
+  ctx.body = 'OK';
 });
 
 healthcheck.get('/liveliness', async (ctx) => {

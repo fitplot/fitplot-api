@@ -11,6 +11,9 @@ kill_timeout = 5
   allowed_public_ports = []
   auto_rollback = true
 
+# This Fly.io app has no [[services.ports]] because it is not open on public internet.
+# Instead, this api is accessed via private networking with a Fly.io `.internal` address.
+# Additionally, any public IPs allocated can be removed with the CLI via: `fly ips`
 [[services]]
   protocol = "tcp"
   internal_port = 8080
@@ -19,15 +22,6 @@ kill_timeout = 5
     type = "requests"
     hard_limit = 200
     soft_limit = 150
-
-  [[services.ports]]
-    port = 80
-    handlers = ["http"]
-    force_https = true
-
-  [[services.ports]]
-    port = 443
-    handlers = ["tls", "http"]
 
   [[services.tcp_checks]]
     interval = "15s"
