@@ -5,7 +5,8 @@
     "dev": "nodemon server.js",
     "start": "node server.js",
     "test": "echo \"No test suite.\" && exit 0",
-    "lint": "eslint --cache --fix .",
+    "lint": "eslint --cache .",
+    "format": "prettier --write .",
     "prepare": "husky install"
   },
   "dependencies": {
