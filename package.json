@@ -6,7 +6,7 @@
     "start": "node server.js",
     "test": "echo \"No test suite.\" && exit 0",
     "lint": "eslint --cache .",
-    "format": "prettier --write .",
+    "format": "prettier --check .",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -31,7 +31,7 @@
     "husky": "^7.0.4",
     "lint-staged": "^13.2.3",
     "nodemon": "^2.0.15",
-    "prettier": "^3.0.0",
+    "prettier": "2.8",
     "prisma": "^5.0.0"
   },
   "volta": {
@@ -71,5 +71,10 @@
         }
       ]
     }
+  },
+  "prettier": {
+    "editorconfig": false,
+    "singleQuote": true,
+    "jsxSingleQuote": true
   }
 }
