@@ -29,7 +29,7 @@ jobs:
         run: npm run lint
 
   format:
-    name: 📐 Lint
+    name: 📐 Format
     runs-on: ubuntu-latest
     steps:
       - name: 🛑 Cancel Previous Runs
