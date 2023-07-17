@@ -41,8 +41,19 @@ app.listen(PORT, async () => {
   console.log(`Server listening on port: ${PORT}`);
 });
 
-app.on('error', (error) => {
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+});
+
+app.on('error', (error, ctx) => {
   console.error(error);
+
+  Sentry.withScope(function (scope) {
+    scope.addEventProcessor(function (event) {
+      return Sentry.addRequestDataToEvent(event, ctx.request);
+    });
+    Sentry.captureException(error);
+  });
 });
 
 module.exports = app;
