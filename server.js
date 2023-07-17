@@ -8,6 +8,7 @@ require('dotenv').config();
 const config = require('./config');
 const routes = require('./routes');
 
+const { sentry } = require('./lib/sentry');
 const session = require('./lib/session');
 
 const PORT = config.port;
@@ -37,23 +38,10 @@ app.use(logger());
 app.use(routes.middleware());
 app.use(routes.allowedMethods());
 
+sentry(app);
+
 app.listen(PORT, async () => {
   console.log(`Server listening on port: ${PORT}`);
-});
-
-Sentry.init({
-  dsn: process.env.SENTRY_DSN,
-});
-
-app.on('error', (error, ctx) => {
-  console.error(error);
-
-  Sentry.withScope(function (scope) {
-    scope.addEventProcessor(function (event) {
-      return Sentry.addRequestDataToEvent(event, ctx.request);
-    });
-    Sentry.captureException(error);
-  });
 });
 
 module.exports = app;
