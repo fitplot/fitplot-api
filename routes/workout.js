@@ -40,7 +40,10 @@ workout.put(
   '/workout/:id',
   validate({
     params: z.object({ id: z.string() }),
-    body: z.object({ name: z.string(), completedAt: z.string().nullable() }),
+    body: z.object({
+      name: z.string().optional(),
+      completedAt: z.string().nullable().optional(),
+    }),
   }),
   user({ required: true }),
   async (ctx) => {
