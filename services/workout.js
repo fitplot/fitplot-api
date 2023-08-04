@@ -1,3 +1,4 @@
+const { factory } = require('../lib/nanoid');
 const prisma = require('../lib/prisma');
 
 async function getWorkoutsForUser(userId, { take, cursor } = {}) {
@@ -31,7 +32,14 @@ async function getWorkout({ id, userId }) {
 }
 
 async function createWorkout(workout) {
-  return await prisma.workout.create({ data: workout });
+  const nanoid = await factory();
+
+  return await prisma.workout.create({
+    data: {
+      ...workout,
+      id: await nanoid(),
+    },
+  });
 }
 
 async function updateWorkout({ id, userId }, { name, completedAt }) {

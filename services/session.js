@@ -1,5 +1,6 @@
 const dayjs = require('dayjs');
 
+const { factory } = require('../lib/nanoid');
 const prisma = require('../lib/prisma');
 const { SESSION_EXPIRATION_TIME } = require('../lib/session');
 
@@ -13,8 +14,11 @@ async function getUserForSession(id) {
 }
 
 async function createSession({ userId }) {
+  const nanoid = await factory();
+
   return prisma.session.create({
     data: {
+      id: await nanoid(),
       userId,
       expiresAt: dayjs().add(SESSION_EXPIRATION_TIME).toISOString(),
     },

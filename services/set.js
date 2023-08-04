@@ -1,6 +1,13 @@
+const { factory } = require('../lib/nanoid');
 const prisma = require('../lib/prisma');
 
 async function createManySets(sets) {
+  const nanoid = await factory();
+
+  for (set of sets) {
+    set.id = await nanoid();
+  }
+
   return await prisma.set.createMany({ data: sets });
 }
 
