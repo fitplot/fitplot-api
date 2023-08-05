@@ -5,6 +5,7 @@ generator client {
 datasource db {
   provider     = "mysql"
   url          = env("DATABASE_URL")
+
   // Planetscale does not support foreign keys, so we will leverage indexes and Prisma relations
   relationMode = "prisma"
 }

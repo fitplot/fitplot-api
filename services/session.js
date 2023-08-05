@@ -10,6 +10,8 @@ async function getUserForSession(id) {
     include: { user: true },
   });
 
+  if (!session) return null;
+
   return session.user;
 }
 
@@ -26,7 +28,14 @@ async function createSession({ userId }) {
 }
 
 async function deleteSession(id) {
-  return await prisma.session.delete({ where: { id } });
+  try {
+    await prisma.session.delete({ where: { id } });
+  } catch (error) {
+    // Record to delete does not exist.
+    if (error.code === 'P2025') return;
+
+    throw error;
+  }
 }
 
 module.exports = {
