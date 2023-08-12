@@ -4,9 +4,12 @@
 pre-commit:
   parallel: true
   commands:
-    format:
+    format-code:
       glob: '*.{js,json}'
       run: 'npm exec prettier --write {staged_files} && git add {staged_files}'
+    format-db-schema:
+      glob: '*.prisma'
+      run: 'npm exec prisma format && git add {staged_files}'
     lint:
       glob: '*.js'
       run: 'eslint --cache --fix {staged_files} && git add {staged_files}'

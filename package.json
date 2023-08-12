@@ -38,15 +38,6 @@
   "volta": {
     "node": "18.14.0"
   },
-  "lint-staged": {
-    "*.js": [
-      "prettier --write .",
-      "eslint --cache --fix ."
-    ],
-    ".prisma": [
-      "npx prisma format"
-    ]
-  },
   "eslintConfig": {
     "root": true,
     "env": {
@@ -77,7 +68,6 @@
     }
   },
   "prettier": {
-    "editorconfig": false,
     "singleQuote": true,
     "jsxSingleQuote": true
   }
