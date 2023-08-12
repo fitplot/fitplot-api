@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 
   // Planetscale does not support foreign keys, so we will leverage indexes and Prisma relations
   relationMode = "prisma"
@@ -17,7 +17,6 @@ model User {
   updatedAt     DateTime           @updatedAt
   email         String             @unique
   firstName     String             @db.Text
-  legacyId      String             @unique
   roles         UserRole[]
   sessions      Session[]
   exercises     Exercise[]
@@ -79,7 +78,6 @@ model Session {
 model Exercise {
   id         String    @id @db.VarChar(12)
   archivedAt DateTime?
-  legacyId   String    @unique
   createdAt  DateTime  @default(now())
   name       String    @db.Text
   updatedAt  DateTime  @updatedAt
@@ -93,7 +91,6 @@ model Exercise {
 model Workout {
   id          String    @id @db.VarChar(12)
   archivedAt  DateTime?
-  legacyId    String    @unique
   createdAt   DateTime  @default(now())
   completedAt DateTime?
   name        String    @db.Text
