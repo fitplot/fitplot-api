@@ -26,7 +26,7 @@
     "zod": "^3.20.6"
   },
   "devDependencies": {
-    "@arkweid/lefthook": "^0.7.7",
+    "@evilmartians/lefthook": "^1.4.8",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-only-error": "^1.0.2",

@@ -6,7 +6,7 @@ pre-commit:
   commands:
     format:
       glob: '*.{js,json}'
-      run: prettier --write {staged_files}
+      run: 'npm exec prettier --write {staged_files} && git add {staged_files}'
     lint:
       glob: '*.js'
-      run: 'eslint --cache --fix {staged_files}'
+      run: 'eslint --cache --fix {staged_files} && git add {staged_files}'
