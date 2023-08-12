@@ -21,7 +21,7 @@ workout.get(
       userId: ctx.user.id,
     });
     ctx.body = workout;
-  }
+  },
 );
 
 workout.post(
@@ -33,7 +33,7 @@ workout.post(
     data.userId = ctx.user.id;
     const workout = await createWorkout(data);
     ctx.body = workout;
-  }
+  },
 );
 
 workout.put(
@@ -49,10 +49,10 @@ workout.put(
   async (ctx) => {
     const workout = await updateWorkout(
       { id: ctx.params.id, userId: ctx.user.id },
-      ctx.request.body
+      ctx.request.body,
     );
     ctx.body = workout;
-  }
+  },
 );
 
 workout.delete(
@@ -64,7 +64,7 @@ workout.delete(
   async (ctx) => {
     await deleteWorkout({ id: ctx.params.id, userId: ctx.user.id });
     ctx.body = { id: ctx.params.id };
-  }
+  },
 );
 
 module.exports = workout;
