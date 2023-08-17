@@ -15,18 +15,6 @@ async function getWorkoutsForUser(userId, { take, cursor } = {}) {
   });
 }
 
-async function getTotalWorkoutsForUser(userId) {
-  return await prisma.workout.count({
-    where: {
-      userId,
-    },
-    select: {
-      _all: true,
-      completedAt: true,
-    },
-  });
-}
-
 async function getWorkout({ id, userId }) {
   return await prisma.workout.findFirst({ where: { id, userId } });
 }
@@ -66,7 +54,6 @@ async function deleteWorkout({ id, userId }) {
 
 module.exports = {
   getWorkoutsForUser,
-  getTotalWorkoutsForUser,
   getWorkout,
   createWorkout,
   updateWorkout,
