@@ -61,7 +61,9 @@
             "ctx": true,
             "pkg": true,
             "req": true,
-            "res": true
+            "res": true,
+            "env": true,
+            "Env": true
           }
         }
       ]

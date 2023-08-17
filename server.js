@@ -3,15 +3,13 @@ const bodyParser = require('koa-bodyparser');
 const cors = require('koa2-cors');
 const logger = require('koa-logger');
 
-require('dotenv').config();
-
-const config = require('./config');
 const routes = require('./routes');
 
+const ENV = require('./lib/env');
 const { sentry } = require('./lib/sentry');
 const session = require('./lib/session');
 
-const PORT = config.port;
+const PORT = ENV.PORT;
 
 const app = new Koa();
 
