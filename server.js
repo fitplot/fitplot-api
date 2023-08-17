@@ -13,7 +13,7 @@ const PORT = ENV.PORT;
 
 const app = new Koa();
 
-app.keys = [process.env.SIGNED_COOKIE_SECRET];
+app.keys = [ENV.SIGNED_COOKIE_SECRET];
 
 app.use(session(app));
 
