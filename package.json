@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": "echo \"No test suite.\" && exit 0",
+    "test": "vitest run",
     "lint": "eslint --cache .",
     "format": "prettier --check .",
     "prepare": "lefthook install"
@@ -21,7 +21,7 @@
     "koa-session": "^6.4.0",
     "koa2-cors": "^2.0.6",
     "koa2-ratelimit": "^1.1.3",
-    "nanoid": "^4.0.2",
+    "nanoid": "^3.3.6",
     "resend": "^0.16.0",
     "zod": "^3.20.6"
   },
@@ -33,7 +33,8 @@
     "eslint-plugin-unicorn": "^48.0.0",
     "nodemon": "^2.0.15",
     "prettier": "^3.0.1",
-    "prisma": "^5.1.1"
+    "prisma": "^5.1.1",
+    "vitest": "^0.34.2"
   },
   "volta": {
     "node": "18.14.0"

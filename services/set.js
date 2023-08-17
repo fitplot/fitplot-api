@@ -1,11 +1,9 @@
-const { factory } = require('../lib/nanoid');
+const { generateId } = require('../lib/id');
 const prisma = require('../lib/prisma');
 
 async function createManySets(sets) {
-  const nanoid = await factory();
-
-  for (set of sets) {
-    set.id = await nanoid();
+  for (const set of sets) {
+    set.id = await generateId();
   }
 
   return await prisma.set.createMany({ data: sets });
@@ -14,6 +12,10 @@ async function createManySets(sets) {
 async function getPreviousSetsForExercise({ exerciseId, userId }, workoutId) {
   const mostRecentSetForExercise = await prisma.set.findFirst({
     where: { exerciseId, userId, NOT: { workoutId } },
+    include: {
+      exercise: true,
+      unit: true,
+    },
     orderBy: { createdAt: 'asc' },
   });
 
@@ -25,7 +27,13 @@ async function getPreviousSetsForExercise({ exerciseId, userId }, workoutId) {
 }
 
 async function getSetsForWorkout({ workoutId, userId }) {
-  return await prisma.set.findMany({ where: { workoutId, userId } });
+  return await prisma.set.findMany({
+    where: { workoutId, userId },
+    include: {
+      exercise: true,
+      unit: true,
+    },
+  });
 }
 
 async function updateSet({ id, userId }, { amount, volume, unit }) {

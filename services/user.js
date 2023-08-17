@@ -1,13 +1,11 @@
-const { factory } = require('../lib/nanoid');
+const { generateId } = require('../lib/id');
 const prisma = require('../lib/prisma');
 
 async function createUser(user) {
-  const nanoid = await factory();
-
   return prisma.user.create({
     data: {
       ...user,
-      id: await nanoid(),
+      id: await generateId(),
     },
   });
 }

@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -86,6 +87,7 @@ model Exercise {
   sets       Set[]
 
   @@index([userId])
+  @@fulltext([name])
 }
 
 model Workout {

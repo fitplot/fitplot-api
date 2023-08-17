@@ -14,7 +14,7 @@ const sets = new Router();
 
 sets.get(
   '/workout/:id/sets',
-  validate({ params: z.object({ id: z.string() }) }),
+  validate({ params: z.object({ id: z.string().min(12).max(12) }) }),
   user({ required: true }),
   async (ctx) => {
     const sets = await getSetsForWorkout({
@@ -28,8 +28,8 @@ sets.get(
 sets.get(
   '/exercise/:id/sets/previous',
   validate({
-    params: z.object({ id: z.string() }),
-    query: z.object({ workoutId: z.string() }),
+    params: z.object({ id: z.string().min(12).max(12) }),
+    query: z.object({ workoutId: z.string().min(12).max(12) }),
   }),
   user({ required: true }),
   async (ctx) => {
@@ -49,11 +49,11 @@ sets.post(
   validate({
     body: z.array(
       z.object({
-        amount: z.string(),
-        exerciseId: z.string(),
-        unit: z.string().default('lbs'),
-        volume: z.string().nullable(),
-        workoutId: z.string(),
+        amount: z.coerce.number().nullable(),
+        exerciseId: z.string().min(12).max(12),
+        unitId: z.string().min(12).max(12),
+        volume: z.coerce.number(),
+        workoutId: z.string().min(12).max(12),
       }),
     ),
   }),
@@ -73,11 +73,11 @@ sets.post(
 sets.put(
   '/workout/set/:id',
   validate({
-    params: z.object({ id: z.string() }),
+    params: z.object({ id: z.string().min(12).max(12) }),
     body: z.object({
-      amount: z.string(),
-      unit: z.string().default('lbs'),
-      volume: z.string().nullable(),
+      amount: z.coerce.number().nullable(),
+      unitId: z.string().min(12).max(12),
+      volume: z.coerce.number(),
     }),
   }),
   user({ required: true }),
@@ -93,7 +93,7 @@ sets.put(
 sets.delete(
   '/workout/set/:id',
   validate({
-    params: z.object({ id: z.string() }),
+    params: z.object({ id: z.string().min(12).max(12) }),
   }),
   user({ required: true }),
   async (ctx) => {

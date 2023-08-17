@@ -1,13 +1,11 @@
-const { factory } = require('../lib/nanoid');
+const { generateId } = require('../lib/id');
 const prisma = require('../lib/prisma');
 
 async function createExercise(exercise) {
-  const nanoid = await factory();
-
   return await prisma.exercise.create({
     data: {
       ...exercise,
-      id: await nanoid(),
+      id: await generateId(),
     },
   });
 }
@@ -18,18 +16,36 @@ async function getExercise({ id, userId }) {
       id,
       userId,
     },
-    include: {
-      sets: true,
-    },
   });
 }
 
-async function getExercisesForUser(userId) {
-  return await prisma.exercise.findMany({
+async function getExercisesForUser(userId, { take, cursor, query = '' } = {}) {
+  const search = query
+    .trim()
+    .replace('+', '')
+    .replace('-', '')
+    .replace('*', '')
+    .replace('&', '')
+    .replace('"', '')
+    .split(' ')
+    .map((word) => console.log(`|${word}|`) || word.trim())
+    .map((word) => word && `${word}*`)
+    .join(' ');
+
+  const exercises = await prisma.exercise.findMany({
+    take,
+    skip: cursor ? 1 : undefined, // Skip the cursor
+    cursor: cursor ? { id: cursor } : undefined,
     where: {
       userId,
+      name: search ? { search } : undefined,
+    },
+    orderBy: {
+      createdAt: 'desc',
     },
   });
+
+  return exercises;
 }
 
 async function updateExercise({ id, userId, name }) {
