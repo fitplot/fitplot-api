@@ -30,7 +30,7 @@ exercises.get(
       exercises,
       cursor: last ? last.id : null,
     };
-  }
+  },
 );
 
 module.exports = exercises;

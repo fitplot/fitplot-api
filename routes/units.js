@@ -4,7 +4,7 @@ const { getUnits } = require('../services/unit');
 
 const units = new Router();
 
-units.get('/units',  async (ctx) => {
+units.get('/units', async (ctx) => {
   const units = await getUnits();
   ctx.body = units;
 });
