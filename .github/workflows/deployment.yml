@@ -86,8 +86,8 @@ jobs:
         uses: superfly/flyctl-actions/setup-flyctl@v1.4
 
       - name: 🚀 Deploy
-        run: flyctl deploy --remote-only \
-          --build-arg COMMIT_SHA=${{ github.sha }}- \
+        run: flyctl deploy --remote-only
+          --build-arg COMMIT_SHA=${{ github.sha }}
           --build-arg CI=$CI
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
