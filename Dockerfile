@@ -14,8 +14,10 @@ FROM base as deps
 
 WORKDIR /app
 
+RUN echo "LEFTHOOK=$LEFTHOOK"
+
 ADD package.json package-lock.json ./
-RUN npm install --include=dev
+RUN LEFTHOOK=0 npm install --include=dev
 
 # setup production node_modules
 FROM base as production-deps
