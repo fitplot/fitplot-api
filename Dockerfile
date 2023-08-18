@@ -10,13 +10,11 @@ RUN apt-get update && apt-get install -y openssl sqlite3 ca-certificates
 # install all node_modules, including dev
 FROM base as deps
 
-ENV LEFTHOOK=0
-
 RUN mkdir /app/
 WORKDIR /app/
 
 ADD package.json package-lock.json ./
-RUN npm install --production=false
+RUN LEFTHOOK=0 && npm install --production=false
 
 # setup production node_modules
 FROM base as production-deps
