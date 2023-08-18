@@ -6,10 +6,11 @@ RUN apt-get update && apt-get install -y openssl sqlite3 ca-certificates
 
 # ARG CI
 # ENV CI=$CI
-ENV LEFTHOOK=0
 
 # install all node_modules, including dev
 FROM base as deps
+
+ENV LEFTHOOK=0
 
 RUN mkdir /app/
 WORKDIR /app/
