@@ -14,11 +14,8 @@ FROM base as deps
 
 WORKDIR /app
 
-RUN echo "LEFTHOOK=$LEFTHOOK"
-RUN echo "CI=$CI"
-
 ADD package.json package-lock.json ./
-RUN LEFTHOOK=0 CI=true npm install --include=dev
+RUN npm install --include=dev
 
 # setup production node_modules
 FROM base as production-deps
@@ -37,14 +34,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules /app/node_modules
 
 # schema doesn't change much so these will stay cached
-ADD prisma ,
-
+ADD prisma /app/prisma
 RUN npx prisma generate
-
-# uncomment below if there is a build or transpile step in the future
-# # app code changes all the time
-# ADD . .
-# RUN npm run build
 
 # build smaller image for running
 FROM base
@@ -53,8 +44,7 @@ ARG GITHUB_SHA
 ENV GITHUB_SHA=$GITHUB_SHA
 ENV PORT=3000
 
-RUN mkdir /app/
-WORKDIR /app/
+WORKDIR /app
 
 COPY --from=production-deps /app/node_modules /app/node_modules
 COPY --from=build /app/node_modules/.prisma /app/node_modules/.prisma
