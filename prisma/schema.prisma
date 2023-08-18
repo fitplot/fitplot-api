@@ -12,63 +12,82 @@ datasource db {
 }
 
 model User {
-  id            String             @id @db.VarChar(12)
-  archivedAt    DateTime?
-  createdAt     DateTime           @default(now())
-  updatedAt     DateTime           @updatedAt
-  email         String             @unique
-  firstName     String             @db.Text
-  roles         UserRole[]
-  sessions      Session[]
+  id String @id @db.VarChar(12)
+
+  archivedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  email         String         @unique
+  firstName     String         @db.Text
+  workouts      Workout[]
+  sets          Set[]
   exercises     Exercise[]
-  organizations UserOrganization[]
+  sessions      Session[]
+  connections   Connection[]
+  roles         Role[]
+  organizations Organization[]
 }
 
 model Organization {
-  id            String             @id @db.VarChar(12)
-  name          String             @db.Text
-  archivedAt    DateTime?
-  createdAt     DateTime           @default(now())
-  updatedAt     DateTime           @updatedAt
-  organizations UserOrganization[]
-}
+  id String @id @db.VarChar(12)
 
-model UserOrganization {
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String       @db.VarChar(12)
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String       @db.VarChar(12)
+  archivedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
-  @@id([userId, organizationId])
-  @@index([userId])
-  @@index([organizationId])
+  name          String @db.Text
+  organizations User[] // implicit many-to-many
 }
 
 model Role {
-  id         String     @id @db.VarChar(12)
+  id String @id @db.VarChar(12)
+
   archivedAt DateTime?
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  name       String     @db.Text
-  users      UserRole[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  name        String       @db.Text
+  users       User[]
+  permissions Permission[]
 }
 
-model UserRole {
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @db.VarChar(12)
-  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  roleId String @db.VarChar(12)
+model Permission {
+  id String @id @db.VarChar(12)
 
-  @@id([userId, roleId])
-  @@index([userId])
-  @@index([roleId])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  action      String // e.g. create, read, update, delete
+  entity      String // e.g. workout, org, user, etc.
+  access      String // e.g. own or any
+  description String @default("")
+  roles       Role[]
+
+  @@unique([action, entity, access])
+}
+
+model Connection {
+  id String @id @db.VarChar(12)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  providerName String
+  providerId   String @unique
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId       String
+
+  @@unique([providerName, providerId])
+  @@unique([providerId, userId])
 }
 
 model Session {
-  id        String   @id @db.VarChar(12)
+  id String @id @db.VarChar(12)
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String   @db.VarChar(12)
   expiresAt DateTime
@@ -77,121 +96,110 @@ model Session {
 }
 
 model Exercise {
-  id         String    @id @db.VarChar(12)
+  id String @id @db.VarChar(12)
+
   archivedAt DateTime?
   createdAt  DateTime  @default(now())
-  name       String    @db.Text
   updatedAt  DateTime  @updatedAt
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String
-  sets       Set[]
+
+  name   String @db.Text
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  sets   Set[]
 
   @@index([userId])
   @@fulltext([name])
 }
 
 model Workout {
-  id          String    @id @db.VarChar(12)
+  id String @id @db.VarChar(12)
+
   archivedAt  DateTime?
   createdAt   DateTime  @default(now())
   completedAt DateTime?
-  name        String    @db.Text
-  updatedAt   DateTime  @updatedAt
-  userId      String    @db.VarChar(12)
-  sets        Set[]
+
+  name      String   @db.Text
+  updatedAt DateTime @updatedAt
+  userId    String   @db.VarChar(12)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sets      Set[]
 
   @@index([userId])
 }
 
 model AmountUnit {
-  id         String    @id @db.VarChar(12)
-  name       String    @db.Text
-  delimiter  String    @unique
+  id String @id @db.VarChar(12)
+
   archivedAt DateTime?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   sets       Set[]
 
+  name      String @db.Text
+  delimiter String @unique
+
   @@map("WorkoutSetAmountUnit")
 }
 
 model Set {
-  id         String     @id @db.VarChar(12)
+  id String @id @db.VarChar(12)
+
   archivedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
   amount     Int?
-  createdAt  DateTime   @default(now())
   exercise   Exercise   @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
   exerciseId String     @db.VarChar(12)
   unit       AmountUnit @relation(fields: [unitId], references: [id])
   unitId     String
-  updatedAt  DateTime   @updatedAt
-  userId     String     @db.VarChar(12)
   volume     Int
   workout    Workout    @relation(fields: [workoutId], references: [id], onDelete: Cascade)
   workoutId  String     @db.VarChar(12)
   tags       SetTag[]
   groups     SetGroup[]
+  User       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String     @db.VarChar(12)
 
   @@index([exerciseId])
   @@index([unitId])
+  @@index([userId])
   @@index([workoutId])
   @@map("WorkoutSet")
 }
 
-model SetTagType {
-  id         String    @id @db.VarChar(12)
-  name       String    @db.Text
+model SetTag {
+  id String @id @db.VarChar(12)
+
   archivedAt DateTime?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
-  sets       SetTag[]
 
-  @@map("WorkoutSetTagType")
-}
+  name String @db.Text
+  sets Set[]
 
-model SetTag {
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  type      SetTagType @relation(fields: [typeId], references: [id], onDelete: Cascade)
-  typeId    String     @db.VarChar(12)
-  set       Set        @relation(fields: [setId], references: [id], onDelete: Cascade)
-  setId     String     @db.VarChar(12)
-
-  @@id([typeId, setId])
-  @@index([typeId])
-  @@index([setId])
   @@map("WorkoutSetTag")
 }
 
-model SetGroupType {
-  id         String     @id @db.VarChar(12)
-  archivedAt DateTime?
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  name       String     @db.Text
-  groups     SetGroup[]
-
-  @@map("WorkoutSetGroupType")
-}
-
 model SetGroup {
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  type      SetGroupType @relation(fields: [typeId], references: [id])
-  typeId    String       @db.VarChar(12)
-  set       Set          @relation(fields: [setId], references: [id], onDelete: Cascade)
-  setId     String       @unique @db.VarChar(12)
+  id String @id @db.VarChar(12)
 
-  @@id([typeId, setId])
-  @@index([typeId])
-  @@index([setId])
+  archivedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  name String @db.Text
+  sets Set[]
+
   @@map("WorkoutSetGroup")
 }
 
 model Waitlist {
-  id        String   @id @db.VarChar(12)
+  id String @id @db.VarChar(12)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  email     String   @unique
-  firstName String   @db.Text
+
+  email     String @unique
+  firstName String @db.Text
 }
