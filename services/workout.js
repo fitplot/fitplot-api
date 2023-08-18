@@ -1,3 +1,4 @@
+const { generateId } = require('../lib/id');
 const prisma = require('../lib/prisma');
 
 async function getWorkoutsForUser(userId, { take, cursor } = {}) {

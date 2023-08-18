@@ -20,17 +20,14 @@ async function getExercise({ id, userId }) {
 }
 
 async function getExercisesForUser(userId, { take, cursor, query = '' } = {}) {
-  const search = query
-    .trim()
-    .replace('+', '')
-    .replace('-', '')
-    .replace('*', '')
-    .replace('&', '')
-    .replace('"', '')
-    .split(' ')
-    .map((word) => console.log(`|${word}|`) || word.trim())
-    .map((word) => word && `${word}*`)
-    .join(' ');
+  const search =
+    query
+      .trim()
+      .replace('+', '')
+      .replace('-', '')
+      .replace('*', '')
+      .replace('&', '')
+      .replace('"', '') + +'*';
 
   const exercises = await prisma.exercise.findMany({
     take,
@@ -38,7 +35,7 @@ async function getExercisesForUser(userId, { take, cursor, query = '' } = {}) {
     cursor: cursor ? { id: cursor } : undefined,
     where: {
       userId,
-      name: search ? { search } : undefined,
+      name: query ? { search } : undefined,
     },
     orderBy: {
       createdAt: 'desc',
