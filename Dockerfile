@@ -4,11 +4,11 @@ FROM node:18-bullseye-slim as base
 # install open ssl and sqlite3 for prisma
 RUN apt-get update && apt-get install -y openssl sqlite3 ca-certificates
 
-# install all node_modules, including dev
-FROM base as deps
-
 ARG CI
 ENV CI=$CI
+
+# install all node_modules, including dev
+FROM base as deps
 
 RUN mkdir /app/
 WORKDIR /app/
@@ -18,9 +18,6 @@ RUN npm install --production=false
 
 # setup production node_modules
 FROM base as production-deps
-
-ARG CI
-ENV CI=$CI
 
 RUN mkdir /app/
 WORKDIR /app/
