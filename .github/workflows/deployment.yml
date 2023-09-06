@@ -73,8 +73,10 @@ jobs:
     name: 🚀 Deploy
     runs-on: ubuntu-latest
     needs: [test, lint, format]
-    # only deploy on pushes to main branch
-    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+    # only build/deploy on pushes (instead of pull requests)
+    if:
+      ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') &&
+      github.event_name == 'push' }}
 
     steps:
       - name: ⬇️ Checkout repo
