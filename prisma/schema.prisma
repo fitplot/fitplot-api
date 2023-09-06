@@ -158,7 +158,7 @@ model Set {
   workoutId  String     @db.VarChar(12)
   tags       SetTag[]
   groups     SetGroup[]
-  User       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String     @db.VarChar(12)
 
   @@index([exerciseId])

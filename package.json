@@ -35,6 +35,9 @@
     "prisma": "^5.1.1",
     "vitest": "^0.34.2"
   },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "volta": {
     "node": "18.14.0"
   },
