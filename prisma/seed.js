@@ -51,13 +51,13 @@ async function main() {
   await prisma.workout.deleteMany({});
   const workouts = [];
   for (const user of users) {
-    const n = Math.floor(Math.random() * 10) + 1;
+    const total = Math.floor(Math.random() * 25) + 1;
     let ago = 0;
-    for (let index = 0; index < n; index++) {
+    for (let number = 1; number <= total; number++) {
       const workout = await prisma.workout.create({
         data: {
           id: await generateId(),
-          name: `My Workout ${index}`,
+          name: `My Workout ${number}`,
           createdAt: dayjs().subtract(ago, 'day').toDate(),
           user: {
             connect: {
@@ -66,7 +66,7 @@ async function main() {
           },
         },
       });
-      ago += Math.floor(Math.random() * 10) + 1;
+      ago += Math.floor(Math.random() * 3) + 2;
       workouts.push(workout);
     }
   }
